@@ -13,8 +13,8 @@
 // limitations under the License.
 
 import { Component, Input, OnInit } from '@angular/core';
-import { OperationSet, YamlLevel } from 'src/shared/interfaces';
-import { readFileAsString } from 'src/shared/functions';
+import { OperationSet } from 'src/shared/interfaces';
+import { readFileAsString, iterateYaml } from 'src/shared/functions';
 import { Observable } from 'rxjs';
 import * as fileSaver from 'file-saver';
 import * as JSZip from 'jszip';
@@ -24,7 +24,7 @@ import * as JSZip from 'jszip';
   templateUrl: './display-results.component.html',
   styleUrls: ['./display-results.component.scss']
 })
-export class DisplayResultsComponent {
+export class DisplayResultsComponent implements OnInit {
   @Input() operationSet: OperationSet;
 
   async downloadFile(yamlFile: File) {
@@ -89,5 +89,9 @@ export class DisplayResultsComponent {
 
   get specFiles(): File[] {
     return this.operationSet.specFiles;
+  }
+
+  ngOnInit() {
+    iterateYaml(this.operationSet.resultSpec);
   }
 }

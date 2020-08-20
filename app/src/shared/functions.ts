@@ -47,3 +47,26 @@ export const flattenYamlFile = async (yamlFile: File): Promise<YamlLevel[]> => {
   });
   return levelArray;
 };
+
+export const iterateYaml = (yamlFile: File) => {
+  readFileAsString(yamlFile).then((res) => {
+    iterateObject(yaml.load(res));
+  });
+};
+
+const iterateObject = (objectNode: object) => {
+  const isArray = Array.isArray(objectNode);
+
+  Object.keys(objectNode).forEach((key) => {
+    if (typeof (objectNode[key]) !== 'object') {
+      console.log(isArray ? `- ${objectNode[key]}` : `${key}: ${objectNode[key]}`);
+      return;
+    }
+
+    if (!isArray) {
+      console.log(`${key}:`);
+    }
+
+    iterateObject(objectNode[key]);
+  });
+};
