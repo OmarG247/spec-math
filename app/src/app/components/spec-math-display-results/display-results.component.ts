@@ -18,14 +18,22 @@ import { readFileAsString, iterateYaml } from 'src/shared/functions';
 import { Observable } from 'rxjs';
 import * as fileSaver from 'file-saver';
 import * as JSZip from 'jszip';
+import { OperationService } from 'src/shared/services/operation.service';
+import { Router } from '@angular/router';
+import { routes } from 'src/shared/routes';
 
 @Component({
   selector: 'app-display-results',
   templateUrl: './display-results.component.html',
   styleUrls: ['./display-results.component.scss']
 })
-export class DisplayResultsComponent implements OnInit {
-  @Input() operationSet: OperationSet;
+export class DisplayResultsComponent {
+  operationSet: OperationSet;
+
+  constructor(operations: OperationService, router: Router) {
+    const results = operations.getResults();
+    results.valid ? this.operationSet = results : router.navigateByUrl(routes.home);
+  }
 
   async downloadFile(yamlFile: File) {
     fileSaver.saveAs(yamlFile);
