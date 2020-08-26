@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OperationSet } from 'src/shared/interfaces';
 import { readFileAsString, iterateYaml } from 'src/shared/functions';
 import { Observable } from 'rxjs';
@@ -27,7 +27,7 @@ import { routes } from 'src/shared/routes';
   templateUrl: './display-results.component.html',
   styleUrls: ['./display-results.component.scss']
 })
-export class DisplayResultsComponent {
+export class DisplayResultsComponent implements OnInit {
   operationSet: OperationSet;
 
   constructor(operations: OperationService, router: Router) {
