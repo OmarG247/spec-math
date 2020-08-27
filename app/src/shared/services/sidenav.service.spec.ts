@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { TestBed, fakeAsync, flush, ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { SideNavService } from './sidenav.service';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { Component, NgModule, ViewChild } from '@angular/core';

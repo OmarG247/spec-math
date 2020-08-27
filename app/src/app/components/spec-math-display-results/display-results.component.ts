@@ -14,7 +14,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { OperationSet } from 'src/shared/interfaces';
-import { readFileAsString, iterateYaml } from 'src/shared/functions';
+import { readFileAsString, compareYaml } from 'src/shared/functions';
 import { Observable } from 'rxjs';
 import * as fileSaver from 'file-saver';
 import * as JSZip from 'jszip';
@@ -99,7 +99,11 @@ export class DisplayResultsComponent implements OnInit {
     return this.operationSet.specFiles;
   }
 
+  get allFiles(): File[] {
+    return this.defaultsFileValid ? [this.operationSet.defaultsFile, ...this.specFiles] : [...this.specFiles];
+  }
+
   ngOnInit() {
-    iterateYaml(this.operationSet.resultSpec);
+    compareYaml(this.operationSet.resultSpec, this.allFiles);
   }
 }
