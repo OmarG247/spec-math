@@ -48,15 +48,19 @@ export const flattenYamlFile = async (yamlFile: File): Promise<YamlLevel[]> => {
   return levelArray;
 };
 
-export const compareYaml = async (yamlFile: File, comparisons: File[]) => {
+export const compareYaml = async (yamlFile: File, sources: File[]) => {
   const results = yaml.load(await readFileAsString(yamlFile));
+  const sourceObjects = await Promise.all(sources.map(async (file) => {
+    return {
+      name: file.name,
+      file: await yaml.load(await readFileAsString(file)),
+    };
+  }));
 
-  readFileAsString(yamlFile).then((res) => {
-    iterateObject(yaml.load(res));
-  });
+  iterateObject(results, sourceObjects);
 };
 
-const iterateObject = (objectNode: object, compareNode?: object) => {
+const iterateObject = (objectNode: object, compareArray?: object[]) => {
   const isArray = Array.isArray(objectNode);
 
   Object.keys(objectNode).forEach((key) => {
