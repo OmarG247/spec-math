@@ -62,6 +62,7 @@ export const compareYaml = async (yamlFile: File, sources: File[]) => {
 
 const iterateObject = (objectNode: object, compareArray?: object[]) => {
   const isArray = Array.isArray(objectNode);
+  const newComparisons = [];
 
   Object.keys(objectNode).forEach((key) => {
     if (typeof (objectNode[key]) !== 'object') {
