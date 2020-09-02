@@ -2,6 +2,7 @@ import { By } from '@angular/platform-browser';
 import { ComponentFixture } from '@angular/core/testing';
 import { YamlLevel } from './interfaces';
 import * as yaml from 'js-yaml';
+import { parse } from 'path';
 
 export const queryElement = (targetFixture: ComponentFixture<any>, targetClass: string) => {
   return targetFixture.debugElement.query(By.css(targetClass));
@@ -58,6 +59,34 @@ export const compareYaml = async (yamlFile: File, sources: File[]) => {
   }));
 
   iterateObject(results, sourceObjects);
+};
+
+type KeyMap = {[key: string]: File[]};
+
+export const buildKeyMap = async (sources: File[], keyMap: KeyMap) => {
+  for (const source of sources) {
+    const parsed = yaml.load(await readFileAsString(source));
+    buildKeyMapForSource('', source, parsed, keyMap);
+  }
+
+  console.log(keyMap);
+};
+
+const buildKeyMapForSource = (baseKey: string, source: File, parsed: object, keyMap: KeyMap) => {
+  if (Array.isArray(parsed) || typeof parsed !== 'object') {
+    return;
+  }
+
+  Object.keys(parsed).forEach((key) => {
+    const fullKey = baseKey + key;
+    if (!keyMap.hasOwnProperty(fullKey)) {
+      keyMap[fullKey] = [];
+    }
+
+    keyMap[fullKey].push(source);
+
+    buildKeyMapForSource(`${fullKey}.`, source, parsed[key], keyMap);
+  });
 };
 
 const iterateObject = (objectNode: object, compareArray?: object[]) => {

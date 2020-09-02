@@ -14,7 +14,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { OperationSet } from 'src/shared/interfaces';
-import { readFileAsString, compareYaml } from 'src/shared/functions';
+import { readFileAsString, compareYaml, buildKeyMap } from 'src/shared/functions';
 import { Observable } from 'rxjs';
 import * as fileSaver from 'file-saver';
 import * as JSZip from 'jszip';
@@ -104,6 +104,7 @@ export class DisplayResultsComponent implements OnInit {
   }
 
   ngOnInit() {
-    compareYaml(this.operationSet.resultSpec, this.allFiles);
+    buildKeyMap(this.allFiles, {});
+    // compareYaml(this.operationSet.resultSpec, this.allFiles);
   }
 }
