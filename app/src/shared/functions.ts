@@ -2,7 +2,6 @@ import { By } from '@angular/platform-browser';
 import { ComponentFixture } from '@angular/core/testing';
 import { YamlLevel } from './interfaces';
 import * as yaml from 'js-yaml';
-import { parse } from 'path';
 
 export const queryElement = (targetFixture: ComponentFixture<any>, targetClass: string) => {
   return targetFixture.debugElement.query(By.css(targetClass));
@@ -94,9 +93,7 @@ const buildKeyMapForSource = (baseKey: string, source: File, parsed: object, key
 };
 
 const compareResultsToSources = (results: object, sourceKeyMap: KeyMap) => {
-  console.log(results);
-
   Object.keys(sourceKeyMap).forEach((key) => {
-    console.log(key);
+    console.log(results[key]);
   });
 };

@@ -107,7 +107,5 @@ export class DisplayResultsComponent implements OnInit {
   ngOnInit() {
     this.sources = processSources(this.operationSet.resultSpec, this.allFiles);
 
-    // buildKeyMap(this.allFiles);
-    // compareYaml(this.operationSet.resultSpec, this.allFiles);
   }
 }
