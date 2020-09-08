@@ -49,7 +49,8 @@ export const flattenYamlFile = async (yamlFile: File): Promise<YamlLevel[]> => {
   return levelArray;
 };
 
-export const compareYaml = async (yamlFile: File, sources: File[]) => {
+export const processSources = async (yamlFile: File, sources: File[]) => {
+  let keyMap: KeyMap;
   const results = yaml.load(await readFileAsString(yamlFile));
   const sourceObjects = await Promise.all(sources.map(async (file) => {
     return {
@@ -58,18 +59,21 @@ export const compareYaml = async (yamlFile: File, sources: File[]) => {
     };
   }));
 
-  iterateObject(results, sourceObjects);
+  keyMap = await buildKeyMap(sources);
+  compareResultsToSources(results, keyMap);
 };
 
 type KeyMap = {[key: string]: File[]};
 
-export const buildKeyMap = async (sources: File[], keyMap: KeyMap) => {
+export const buildKeyMap = async (sources: File[]) => {
+  const fileKeyMap = {};
+
   for (const source of sources) {
     const parsed = yaml.load(await readFileAsString(source));
-    buildKeyMapForSource('', source, parsed, keyMap);
+    buildKeyMapForSource('', source, parsed, fileKeyMap);
   }
 
-  console.log(keyMap);
+  return fileKeyMap;
 };
 
 const buildKeyMapForSource = (baseKey: string, source: File, parsed: object, keyMap: KeyMap) => {
@@ -89,20 +93,10 @@ const buildKeyMapForSource = (baseKey: string, source: File, parsed: object, key
   });
 };
 
-const iterateObject = (objectNode: object, compareArray?: object[]) => {
-  const isArray = Array.isArray(objectNode);
-  const newComparisons = [];
+const compareResultsToSources = (results: object, sourceKeyMap: KeyMap) => {
+  console.log(results);
 
-  Object.keys(objectNode).forEach((key) => {
-    if (typeof (objectNode[key]) !== 'object') {
-      console.log(isArray ? `- ${objectNode[key]}` : `${key}: ${objectNode[key]}`);
-      return;
-    }
-
-    if (!isArray) {
-      console.log(`${key}:`);
-    }
-
-    iterateObject(objectNode[key]);
+  Object.keys(sourceKeyMap).forEach((key) => {
+    console.log(key);
   });
 };

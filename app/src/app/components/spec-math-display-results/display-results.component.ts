@@ -14,7 +14,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { OperationSet } from 'src/shared/interfaces';
-import { readFileAsString, compareYaml, buildKeyMap } from 'src/shared/functions';
+import { readFileAsString, processSources } from 'src/shared/functions';
 import { Observable } from 'rxjs';
 import * as fileSaver from 'file-saver';
 import * as JSZip from 'jszip';
@@ -29,6 +29,7 @@ import { routes } from 'src/shared/routes';
 })
 export class DisplayResultsComponent implements OnInit {
   operationSet: OperationSet;
+  sources: any;
 
   constructor(operations: OperationService, router: Router) {
     const results = operations.getResults();
@@ -104,7 +105,9 @@ export class DisplayResultsComponent implements OnInit {
   }
 
   ngOnInit() {
-    buildKeyMap(this.allFiles, {});
+    this.sources = processSources(this.operationSet.resultSpec, this.allFiles);
+
+    // buildKeyMap(this.allFiles);
     // compareYaml(this.operationSet.resultSpec, this.allFiles);
   }
 }
